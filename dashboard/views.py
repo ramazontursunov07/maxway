@@ -115,7 +115,7 @@ def user_delete(request,pk):
 
 @login_required_decarator
 def category_create(request):
-    """This is the metod for creating product categories: Pizzas, Burgers..."""
+    """This is the method for creating product categories: Pizzas, Burgers..."""
     model = Category()
     form = forms.CategoryForm(request.POST or None, instance=model)
     if request.POST and form.is_valid():

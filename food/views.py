@@ -9,12 +9,12 @@ from .forms import *
 def home_page(request):
     if request.GET:
         product = get_product_by_id(request.GET.get("product_id", 0))
-        return JsonResponse(product)
+        return JsonResponse(product,safe=False)
 
 def order_page(request):
     if request.GET:
         user = get_user_by_phone(request.GET.get("phone_number",0))
-        return JsonResponse(user)
+        return JsonResponse(user,safe=False)
 
 def index(request):
     categories = Category.objects.all()
@@ -26,12 +26,14 @@ def index(request):
     print(total_price)
     if orders_list:
         for key, val in json.loads(orders_list).items():
-            orders.append(
-                {
-                "product": Product.objects.get(pk=int(key)),
-                "count": val
-                }
-            )
+            product = Product.objects.filter(pk=int(key)).first()
+            if product:
+                orders.append(
+                    {
+                        "product": product,
+                        "count": val
+                    }
+                )
     ctx = {
         'categories': categories,
         'products': products,
